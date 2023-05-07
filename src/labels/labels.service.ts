@@ -18,30 +18,31 @@ export class LabelsService {
       }
     }
 
-    async getMessagesByLabel(label: string): Promise<any> {
+    async searchMailsByLabel(label: string) {
+      // Connect and authenticate
+      await this.appService.client.connect();
+  
+      // Select the INBOX mailbox
       let lock = await this.appService.client.getMailboxLock('INBOX');
-    
+  
       try {
-        // Fetch messages that have the label in the labels field
+        // Search for messages with the given label
+        let results = await this.appService.client.search({ labels: [label]});
+  
+        // Fetch the envelope and body of the messages
         let messages = [];
-        for await (let msg of this.appService.client.fetch(
-          { labels: label },
-          { envelope: true, uid: true }
-        )) {
+        for await (let msg of this.appService.client.fetch(results, { envelope: true, bodyStructure: true,  labels: true })) {
           messages.push(msg);
         }
-    console.log(messages)
-        // Return the messages, or an empty array if none were found
-        return messages || [];
-      } catch (error) {
-        // Handle any errors that occurred in the try block
-        console.error('Error fetching messages by label:', error);
+  
+        // Return the messages array
+        return messages;
       } finally {
         // Release the lock
         lock.release();
       }
     }
+}  
     
-    
-}
+
 

@@ -63,7 +63,7 @@ export class AppController {
     return unseenMessages;
   }
 
-  @Get('/search/:email')
+  @Get('/searchByMail/:email')
   
   async searchMessagesByEmail(@Param('email') email: string): Promise<any> {
     await this.imapService.connect()
@@ -71,10 +71,10 @@ export class AppController {
     return messages;
   }
 
-  @Get('/label/:label')
+  @Get('/searchBylabel/:label')
   async getMessagesByLabel(@Query('label') label: string): Promise<any> {
     await this.imapService.connect()
-    const messages = await this.labelsService.getMessagesByLabel(label);
+    const messages = await this.labelsService.searchMailsByLabel(label);
     return messages;
   }
 
