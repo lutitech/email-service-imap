@@ -8,12 +8,12 @@ export class AppService {
 
   async connect(): Promise<void> {
     this.client = new ImapFlow({
-      host: '',
+      host: 'mail.forbessolarsystems.com',
       port: 993,
       secure: true,
        auth: {
-        user: '',
-        pass: '',
+        user: 'lutor.ayangaor@forbessolarsystems.com',
+        pass: 'Luti@4148#',
       },
     });
     await this.client.connect();

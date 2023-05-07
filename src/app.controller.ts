@@ -67,21 +67,22 @@ export class AppController {
   
   async searchMessagesByEmail(@Param('email') email: string): Promise<any> {
     await this.imapService.connect()
-    const messages = await this.searchService.searchMessagesByEmail(email);
+    const messages = await this.searchService.searchMailByEmail(email);
     return messages;
   }
 
   @Get('/label/:label')
-  async getMessagesByLabel(@Param('label') label: string): Promise<any> {
+  async getMessagesByLabel(@Query('label') label: string): Promise<any> {
     await this.imapService.connect()
     const messages = await this.labelsService.getMessagesByLabel(label);
     return messages;
   }
 
   @Get('set-label/:uid/:label')
-  async setLabel(@Param('uid') uid: number, @Param('label') label: string): Promise<void> {
-    
-    await this.labelsService.setLabelToEmail(uid, label);
+  async setLabel(@Param('uid') uid: number, label: string): Promise<void> {
+    await this.imapService.connect()
+    const setlabel = await this.labelsService.setLabel(uid, label);
+    return setlabel
   }
 
   @Delete('delete/:uid')
